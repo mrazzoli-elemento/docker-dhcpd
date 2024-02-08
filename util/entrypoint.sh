@@ -16,8 +16,8 @@ if [ $# -eq 1 -a -n "$1" ]; then
     # skip wait-for-interface behavior if found in path
     if ! which "$1" >/dev/null; then
         # loop until interface is found, or we give up
-        NEXT_WAIT_TIME=1
-        until [ -e "/sys/class/net/$1" ] || [ $NEXT_WAIT_TIME -eq 4 ]; do
+        NEXT_WAIT_TIME=5
+        until [ -e "/sys/class/net/$1" ]; do
             sleep $(( NEXT_WAIT_TIME++ ))
             echo "Waiting for interface '$1' to become available... ${NEXT_WAIT_TIME}"
         done
