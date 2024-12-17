@@ -2,7 +2,6 @@
 
 set -e
 
-
 # Support docker run --init parameter which obsoletes the use of dumb-init,
 # but support dumb-init for those that still use it without --init
 if [ $$ -eq 1 ]; then
@@ -52,8 +51,8 @@ if [ -n "$IFACE" ]; then
     uid=$(stat -c%u "$data_dir")
     gid=$(stat -c%g "$data_dir")
     groupmod -og $gid dhcpd
-    usermod -ou $uid dhcpd
-
+    usermod -ou $uid dhcpd || usermod -ou $uid dhcpd    # first attempt could fail, see https://github.com/cytopia/devilbox/issues/703#issuecomment-727190879
+    
     [ -e "$data_dir/dhcpd.leases" ] || touch "$data_dir/dhcpd.leases"
     chown dhcpd:dhcpd "$data_dir/dhcpd.leases"
     if [ -e "$data_dir/dhcpd.leases~" ]; then
